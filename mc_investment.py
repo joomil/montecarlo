@@ -4,17 +4,14 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-# Fetch historical data
 def fetch_historical_data(tickers, start_date, end_date):
     stock_data = yf.download(tickers, start=start_date, end=end_date)['Adj Close']
     return stock_data
 
-# Calculate daily returns
 def calculate_daily_returns(stock_data):
     daily_returns = stock_data.pct_change().dropna()
     return daily_returns
 
-# Simulate portfolio allocations
 def simulate_portfolios(daily_returns, num_portfolios=5000, risk_free_rate=0.01):
     num_assets = len(daily_returns.columns)
     results = np.zeros((4, num_portfolios))
@@ -36,8 +33,7 @@ def simulate_portfolios(daily_returns, num_portfolios=5000, risk_free_rate=0.01)
 
     return results, weights_record
 
-# Plot the results
-def plot_simulation(results, weights_record, tickers):
+def plot_simulation(results, weights_record, tickers, investment_amount):
     max_sharpe_idx = np.argmax(results[2])
     max_sharpe_allocation = weights_record[int(results[3,max_sharpe_idx])]
     max_sharpe_return = results[0,max_sharpe_idx]
@@ -51,6 +47,7 @@ def plot_simulation(results, weights_record, tickers):
     print("Maximum Sharpe Ratio Portfolio Allocation\n")
     print("Annualized Return:", max_sharpe_return)
     print("Annualized Volatility:", max_sharpe_std_dev)
+    print("Expected Portfolio Value:", investment_amount * (1 + max_sharpe_return))
     print("\n")
     for i, ticker in enumerate(tickers):
         print(f"{ticker}: {max_sharpe_allocation[i]:.2%}")
@@ -58,6 +55,7 @@ def plot_simulation(results, weights_record, tickers):
     print("\nMinimum Volatility Portfolio Allocation\n")
     print("Annualized Return:", min_vol_return)
     print("Annualized Volatility:", min_vol_std_dev)
+    print("Expected Portfolio Value:", investment_amount * (1 + min_vol_return))
     print("\n")
     for i, ticker in enumerate(tickers):
         print(f"{ticker}: {min_vol_allocation[i]:.2%}")
@@ -72,19 +70,28 @@ def plot_simulation(results, weights_record, tickers):
     plt.ylabel('Return')
     plt.show()
 
-# Parameters
-tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA']
-start_date = '2020-01-01'
-end_date = datetime.today().strftime('%Y-%m-%d')
+def main():
+    # Parameters
+    tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN']
+    start_date = '2020-01-01'
+    end_date = datetime.today().strftime('%Y-%m-%d')
+    num_portfolios = 5000
+    risk_free_rate = 0.01
 
-# Fetch historical data
-stock_data = fetch_historical_data(tickers, start_date, end_date)
+    # User input for investment amount
+    investment_amount = float(input("Enter the amount of investment: "))
 
-# Calculate daily returns
-daily_returns = calculate_daily_returns(stock_data)
+    # Fetch historical data
+    stock_data = fetch_historical_data(tickers, start_date, end_date)
 
-# Simulate portfolio allocations
-results, weights_record = simulate_portfolios(daily_returns)
+    # Calculate daily returns
+    daily_returns = calculate_daily_returns(stock_data)
 
-# Plot the simulation results
-plot_simulation(results, weights_record, tickers)
+    # Simulate portfolio allocations
+    results, weights_record = simulate_portfolios(daily_returns, num_portfolios, risk_free_rate)
+
+    # Plot the simulation results
+    plot_simulation(results, weights_record, tickers, investment_amount)
+
+if __name__ == "__main__":
+    main()
