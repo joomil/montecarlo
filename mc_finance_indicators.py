@@ -24,18 +24,30 @@ def simulate_stock_prices(start_price, mean, std_dev, days, iterations):
 
 def plot_simulation(simulated_prices):
     plt.figure(figsize=(10, 6))
-    plt.plot(simulated_prices)
+    plt.plot(simulated_prices, color='blue', alpha=0.1)
     plt.xlabel('Days')
     plt.ylabel('Price')
     plt.title('Monte Carlo Simulation of Stock Prices')
+
+    # Calculate and plot indicators
+    final_prices = simulated_prices[-1]
+    mean_price = np.mean(final_prices)
+    std_dev_price = np.std(final_prices)
+    conf_interval = np.percentile(final_prices, [2.5, 97.5])
+
+    plt.axhline(mean_price, color='red', linestyle='--', label=f'Mean Price: ${mean_price:.2f}')
+    plt.fill_between(range(days), mean_price - std_dev_price, mean_price + std_dev_price, color='yellow', alpha=0.3, label=f'1 Std Dev: ${std_dev_price:.2f}')
+    plt.fill_between(range(days), conf_interval[0], conf_interval[1], color='green', alpha=0.3, label=f'95% Conf Interval: ${conf_interval[0]:.2f} - ${conf_interval[1]:.2f}')
+
+    plt.legend()
     plt.show()
 
 # Parameters
 ticker = 'HO.PA'
 start_date = '2020-01-01'
 end_date = datetime.today().strftime('%Y-%m-%d')  # Get today's date in YYYY-MM-DD format
-days = 5  # Number of trading days in a year
-iterations = 100
+days = 252  # Number of trading days in a year
+iterations = 1000
 
 # Fetch historical data
 stock_prices = fetch_historical_data(ticker, start_date, end_date)
@@ -51,5 +63,5 @@ std_dev = log_returns.std()
 start_price = stock_prices[-1]
 simulated_prices = simulate_stock_prices(start_price, mean, std_dev, days, iterations)
 
-# Plot the simulation
+# Plot the simulation with indicators
 plot_simulation(simulated_prices)

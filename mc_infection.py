@@ -76,11 +76,11 @@ def plot_final_infection_distribution(infection_counts):
     plt.show()
 
 # Parameters
-population_size = 1000  # Total population size
+population_size = 8000000000  # Total population size
 initial_infected = 1  # Initial number of infected individuals
 transmission_rate = 1  # Probability of disease transmission per contact
 recovery_rate = 0.05  # Probability of recovery per day
-days = 100  # Number of days to simulate
+days = 365  # Number of days to simulate
 iterations = 1000  # Number of Monte Carlo simulations
 
 # Run the Monte Carlo simulation
