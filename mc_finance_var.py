@@ -59,7 +59,7 @@ def calculate_cvar(simulated_prices, var, confidence_level=5):
 
 # Parameters
 ticker = 'HO.PA'
-start_date = '2020-01-01'
+start_date = '2010-01-01'
 end_date = datetime.today().strftime('%Y-%m-%d')  # Get today's date in YYYY-MM-DD format
 days = 252  # Number of trading days in a year
 iterations = 1000
