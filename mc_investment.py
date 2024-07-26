@@ -72,7 +72,7 @@ def plot_simulation(results, weights_record, tickers, investment_amount):
 
 def main():
     # Parameters
-    tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN']
+    tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'META', 'TSLA']
     start_date = '2020-01-01'
     end_date = datetime.today().strftime('%Y-%m-%d')
     num_portfolios = 5000
