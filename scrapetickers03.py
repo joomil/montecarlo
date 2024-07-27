@@ -1,13 +1,15 @@
 import time
 import csv
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options
+from webdriver_manager.firefox import GeckoDriverManager
 from bs4 import BeautifulSoup
 
-# Step 1: Set up WebDriver with the path to ChromeDriver
-chrome_driver_path = "/path/to/chromedriver"  # Replace with the actual path to your ChromeDriver
-service = Service(chrome_driver_path)
-driver = webdriver.Chrome(service=service)
+# Step 1: Set up WebDriver with WebDriver Manager
+service = FirefoxService(GeckoDriverManager().install())
+options = Options()
+driver = webdriver.Firefox(service=service, options=options)
 
 # Step 2: Open the URL of the first page
 base_url = "https://companiesmarketcap.com/page/"
